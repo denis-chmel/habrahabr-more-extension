@@ -135,7 +135,7 @@ $(document).on("click", "#next_page", function () {
                 nextPrevBlock.removeClass("started"); // убираем флаг
 
                 $([
-                    ".posts_list .posts", // догружаем посты (большинство страниц)
+                    ".posts", // догружаем посты (большинство страниц)
                     ".users", // юзеров на /users/
                     ".hubs_list .hubs", // блоги на /hubs/
                     ".companies", // /companies/
