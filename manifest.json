@@ -1,6 +1,6 @@
 {
     "name":"Habrahabr AJAX Paging",
-    "version":"1.1",
+    "version":"1.1.1",
     "description":"Loads next page of habrahabr.ru when you scroll to footer, loads new posts on current page when you scroll to top (or each minute)",
     "icons":{
         "48":"images/icon48.png"
