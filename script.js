@@ -2,22 +2,22 @@ var MAX_CHECKS_FOR_NEW_POSTS = 60; // times, to not waste traffic if user is AFK
 var CHECK_FOR_NEW_POSTS_EACH = 60; // seconds
 
 $(function () {
-	prepareAdvancedNextPageLink();
-	startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS);
+    prepareAdvancedNextPageLink();
+    startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS);
 });
 
 function startCheckingNewPosts(limit) {
-	window.limitChecks = limit;
-	clearInterval(window.checkNewPostsTimer);
-	window.checkNewPostsTimer = setInterval(function () {
-		window.limitChecks--;
-		if (window.limitChecks < 0) {
-			// self-destroy timer
-			clearInterval(window.checkNewPostsTimer);
-		} else {
-			checkForNewPosts();
-		}
-	}, CHECK_FOR_NEW_POSTS_EACH * 1000);
+    window.limitChecks = limit;
+    clearInterval(window.checkNewPostsTimer);
+    window.checkNewPostsTimer = setInterval(function () {
+        window.limitChecks--;
+        if (window.limitChecks < 0) {
+            // self-destroy timer
+            clearInterval(window.checkNewPostsTimer);
+        } else {
+            checkForNewPosts();
+        }
+    }, CHECK_FOR_NEW_POSTS_EACH * 1000);
 }
 
 function checkForNewPosts(andLoadThem) {
@@ -31,13 +31,24 @@ function checkForNewPosts(andLoadThem) {
         success:function (response) {
             $(".new-posts-ajax").remove();
             // Находим все айдишники постов на текущей странице и сравниваем с айишниками в ответе
-            var newPosts = getPostIds(response).diff(getPostIds());
-            setNewTopicsCount(newPosts.length); // выставляем бэйджик
-            if (andLoadThem && newPosts.length) {
-                addNewPosts(newPosts, response);
+            var oldPostIds = getPostIds();
+            var newPostIds = getPostIds(response).diff(oldPostIds);
+            updateOldPosts(oldPostIds, response); // раз уж загрузили свежие версии старых постов обновим их на текущей странице
+            setNewTopicsCount(newPostIds.length); // выставляем бэйджик
+            if (andLoadThem && newPostIds.length) {
+                addNewPosts(newPostIds, response);
             }
         }
     });
+}
+
+function updateOldPosts(oldPostIds, fromHTML) {
+    for (var i = 0; i < oldPostIds.length; i++) {
+        var newPost = $("#" + oldPostIds[i], fromHTML);
+        if (newPost.length) {
+            $("#" + oldPostIds[i]).html(newPost.html());
+        }
+    }
 }
 
 function addNewPosts(postIds, fromHTML) {
@@ -71,14 +82,14 @@ function setNewTopicsCount(count) {
     Tinycon.setBubble(count);
 }
 
-	function getPostIds(where) {
-		var postIds = [];
-		$(".post", where).each(function () {
-			var postId = $(this).attr("id");
-			postIds.push(postId);
-		});
-		return postIds;
-	}
+function getPostIds(where) {
+    var postIds = [];
+    $(".post", where).each(function () {
+        var postId = $(this).attr("id");
+        postIds.push(postId);
+    });
+    return postIds;
+}
 
 Array.prototype.diff = function (a) {
     return this.filter(function (i) {
@@ -125,12 +136,12 @@ function prepareAdvancedNextPageLink() {
         // нечего делать если ссылки нет (например это последняя страница)
         return;
     }
-    $(".next-prev").append( // добавляем скрытый блок с аякс крутилкой и кнопкой отмены
+    $(".next-prev").append(// добавляем скрытый блок с аякс крутилкой и кнопкой отмены
         '<li class="more-posts">' +
-            '<span class="buttons" style="background-image: url('+ chrome.extension.getURL('images/ajax.gif') + ')">' +
-                '<input type="submit" class="cancel btn btn-big" value="Стой, дальше не надо"/>' +
+            '<span class="buttons" style="background-image: url(' + chrome.extension.getURL('images/ajax.gif') + ')">' +
+            '<input type="submit" class="cancel btn btn-big" value="Стой, дальше не надо"/>' +
             '</span>' +
-        '</li>'
+            '</li>'
     );
 }
 
