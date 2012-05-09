@@ -7,20 +7,23 @@ $(function () {
 });
 
 function startCheckingNewPosts(limit) {
-    window.limitChecks = limit;
-    clearInterval(window.checkNewPostsTimer);
-    window.checkNewPostsTimer = setInterval(function () {
-        window.limitChecks--;
-        if (window.limitChecks < 0) {
-            // self-destroy timer
-            clearInterval(window.checkNewPostsTimer);
-        } else {
-            checkForNewPosts();
-        }
+    $("#warning-suspended-checks").remove();
+    clearTimeout(window.checkNewPostsTimer); // должен существовать только один таймер
+    window.checkNewPostsTimer = setTimeout(function () {
+        checkForNewPosts(function () {
+            if (limit > 0) {
+                startCheckingNewPosts(limit - 1); // re-schedule itself
+            } else {
+                $(".new-posts .inner").append(
+                    '<p id="warning-suspended-checks"><br>Автоматическая проверка приостановлена, поскольку вас не было около '
+                        + Math.ceil(MAX_CHECKS_FOR_NEW_POSTS * CHECK_FOR_NEW_POSTS_EACH / 60) + " минут." + '</p>'
+                );
+            }
+        });
     }, CHECK_FOR_NEW_POSTS_EACH * 1000);
 }
 
-function checkForNewPosts(andLoadThem) {
+function checkForNewPosts(afterCheckCallback) {
     if ($(".posts").length == 0) {
         // это вообще не страница с постами, уходим
         return;
@@ -34,12 +37,15 @@ function checkForNewPosts(andLoadThem) {
             var oldPostIds = getPostIds();
             var newPostIds = getPostIds(response).diff(oldPostIds);
             updateOldPosts(oldPostIds, response); // раз уж загрузили свежие версии старых постов обновим их на текущей странице
-            setNewTopicsCount(newPostIds.length); // выставляем бэйджик
-            if (andLoadThem && newPostIds.length) {
-                addNewPosts(newPostIds, response);
-            }
+            addNewPostsAsHidden(newPostIds, response);
+            stopTrackingScrollEvent = false;
+            if (afterCheckCallback) afterCheckCallback();
         }
     });
+}
+
+function getHiddenNewPosts() {
+    return $(".post:hidden");
 }
 
 function updateOldPosts(oldPostIds, fromHTML) {
@@ -51,13 +57,13 @@ function updateOldPosts(oldPostIds, fromHTML) {
     }
 }
 
-function addNewPosts(postIds, fromHTML) {
+function addNewPostsAsHidden(postIds, fromHTML) {
     for (var i = postIds.length - 1; i >= 0; i--) {
-        $(".posts").prepend($("#" + postIds[i], fromHTML));
+        newPost = $("#" + postIds[i], fromHTML);
+        newPost.hide(); // будут показаны когда юзер попросит
+        $(".posts").prepend(newPost);
     }
-    $(".new-posts").remove();
-    Tinycon.setBubble(0);
-    startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS); // пролонгируем лимит проверки, поскольку юзер жив
+    setNewTopicsCount(getHiddenNewPosts().length); // перевыставляем бэйджик
 }
 
 function setNewTopicsCount(count) {
@@ -67,15 +73,17 @@ function setNewTopicsCount(count) {
         return;
     }
     var counterSpan = $(".new-posts .count");
-    var topics = count > 1 ? count > 4 ? "записей" : "записи" : "запись"; // works till 20 only, but there won't be more
+    var topics = count > 1 ? count > 4 ? "записей" : "записи" : "запись"; // works till 20 only :(
     var tsya = count > 1 ? "лись" : "лась";
     if (counterSpan.length) {
         counterSpan.html(count + ' ' + topics);
         $(".new-posts .tsya").html(tsya);
     } else {
         $(".posts").prepend(
-            '<div id="global_notify" class="new-posts"><div class="inner">Пока вы читали, на этой странице появи<span class="tsya">' + tsya + '</span> еще ' +
-                '<a class="count" href="#load">' + count + ' ' + topics + '</a></div></div>'
+            '<div id="global_notify" class="new-posts"><div class="inner">' +
+                'Пока вы читали, на этой странице появи<span class="tsya">' + tsya + '</span> еще ' +
+                '<a class="count" href="#load">' + count + ' ' + topics + '</a>' + ' (<a href="#checknow" id="posts-check-now">проверить снова</a>)' +
+                '</div></div>'
         );
     }
     // Add badge to the favicon
@@ -97,8 +105,19 @@ Array.prototype.diff = function (a) {
     });
 };
 
+$(document).on("click", "#posts-check-now", function () {
+    startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS); // пролонгируем лимит проверки, поскольку юзер жив
+    checkForNewPosts();
+    return false;
+});
+
 $(document).on("click", ".new-posts a.count", function () {
-    checkForNewPosts(true);
+    startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS); // пролонгируем лимит проверки, поскольку юзер жив
+    var newPosts = getHiddenNewPosts();
+    $(".loaded-before").remove(); // удаляем предыдущий разделитель
+    newPosts.show().last().after('<p class="loaded-before">Загруженные ранее:</p>');
+    setNewTopicsCount(0);
+    return false;
 });
 
 $(document).on("click", "#next_page", function () {
@@ -118,22 +137,22 @@ $(document).on("click", "#next_page", function () {
                 $([
                     ".posts", // догружаем посты (большинство страниц)
                     ".users", // юзеров на /users/
-                    ".hubs", // блоги на /hubs/
+                    ".hubs_list .hubs", // блоги на /hubs/
                     ".companies", // /companies/
                     ".events_list" // события /events/coming/
-                ]).each(function(key, value){
-                    $(value).append($(response).find(value).html());
-                });
+                ]).each(function (key, value) {
+                        $(value).append($(response).find(value).html());
+                    });
 
-                // следующие сообщения в личке /users/%USERNAME%/mail/
-                nextPageRows = $(response).find(".inbox_page tbody");
+                // сообщения в личке /users/%USERNAME%/mail/
+                var nextPageRows = $(response).find(".inbox_page tbody");
                 nextPageRows.find("th").closest("tr").remove(); // кроме tr с заголовками
                 $(".inbox_page tbody").append(nextPageRows.html());
 
-                // и заменяем ссылки туда/сюда/страницы на новые
+                // заменяем блок туда/сюда/пэйджинг на новый
                 $(".page-nav").html($(".page-nav", response).html());
                 prepareAdvancedNextPageLink();
-                stopTrackingScrollToBottom = false; // описание флага будет ниже
+                stopTrackingScrollEvent = false;
             }
         });
     }, 1000); // начать через 1 секунду, чтобы юзер мог успеть отменить
@@ -144,6 +163,7 @@ $(document).on("click", ".next-prev .cancel", function () {
     // killScroll = false; // commented, so after user clicked "stop" scroll won't activate it again, unless after user click "load more" manually
     clearTimeout(window.morePostsCounter);
     $(".next-prev").removeClass("started");
+    return false;
 });
 
 function prepareAdvancedNextPageLink() {
@@ -161,21 +181,23 @@ function prepareAdvancedNextPageLink() {
     );
 }
 
-var stopTrackingScrollToBottom = false;
+var stopTrackingScrollEvent = false;
 $(window).scroll(function () {
+    if (stopTrackingScrollEvent) {
+        return;
+    }
     if ($(window).scrollTop() + 10 >= ($(document).height() - ($(window).height()))) { // за 10 пикселов до конца страницы
-        if (stopTrackingScrollToBottom == false) { // проверяем не инициирован ли уже процесс дозагрузки
-            stopTrackingScrollToBottom = true; // отключаем этот уловитель скролла на время дозагрузки
-            $("#next_page").click(); // кликаем ссылку "Туда"
-        }
+        stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
+        $("#next_page").click(); // кликаем ссылку "Туда"
     }
     if ($(window).scrollTop() == 0) { // юзер доскроллил до начала странцы
+        stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
         startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS); // пролонгируем лимит проверки, поскольку юзер жив
         checkForNewPosts();
     }
 });
 
-// Canel autoload if <Esc> pressed
+// Cancel autoload next page if <Esc> pressed
 $(document).keyup(function (e) {
     if (e.keyCode == 27) { // esc
         $('.more-posts .cancel').click();

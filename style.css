@@ -37,3 +37,10 @@
 .new-posts-ajax {
 	position: absolute; margin: 8px 0 0 -30px;
 }
+
+.loaded-before {
+    color: #CCC;
+    font-size: 160%;
+    marg1in-top: 80px;
+    margin-bottom: 20px;
+}
