@@ -1,0 +1,39 @@
+.next-prev {
+    height: 32px;
+}
+
+.next-prev .more-posts .buttons {
+    position: absolute;
+    margin-left: -30px;
+    padding-left: 30px;
+    background: url("images/ajax.gif") left center no-repeat;
+}
+
+.next-prev .more-posts {
+    display: none;
+}
+
+.next-prev.started li {
+    display: none;
+}
+
+.next-prev.started li.more-posts {
+    display: block;
+}
+
+.next-prev .cancel {
+    background: #A00;
+    color: #FFF;
+}
+
+.next-prev .cancel:hover {
+    background: #D00;
+}
+
+#global_notify.new-posts .inner {
+    background: #E8E8FF;
+}
+
+.new-posts-ajax {
+	position: absolute; margin: 8px 0 0 -30px;
+}
