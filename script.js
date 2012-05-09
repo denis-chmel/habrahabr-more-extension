@@ -135,14 +135,14 @@ $(document).on("click", "#next_page", function () {
                 nextPrevBlock.removeClass("started"); // убираем флаг
 
                 $([
-                    ".posts", // догружаем посты (большинство страниц)
+                    ".posts_list .posts", // догружаем посты (большинство страниц)
                     ".users", // юзеров на /users/
                     ".hubs_list .hubs", // блоги на /hubs/
                     ".companies", // /companies/
-                    ".events_list" // события /events/coming/
+                    ".events_list:not(.posts_list)" // события /events/coming/ (исключение :not для /feed/new/, где есть оба: class="posts_list events_list")
                 ]).each(function (key, value) {
-                        $(value).append($(response).find(value).html());
-                    });
+                    $(value).append($(response).find(value).html());
+                });
 
                 // сообщения в личке /users/%USERNAME%/mail/
                 var nextPageRows = $(response).find(".inbox_page tbody");
