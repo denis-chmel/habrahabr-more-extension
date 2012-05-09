@@ -114,8 +114,24 @@ $(document).on("click", "#next_page", function () {
                     return;
                 }
                 nextPrevBlock.removeClass("started"); // убираем флаг
-                $(".posts").append($(response).find(".posts").html()); // добавляем посты в конец списка
-                $(".page-nav").html($(".page-nav", response).html()); // и заменяем ссылки туда/сюда/страницы на новые
+
+                $([
+                    ".posts", // догружаем посты (большинство страниц)
+                    ".users", // юзеров на /users/
+                    ".hubs", // блоги на /hubs/
+                    ".companies", // /companies/
+                    ".events_list" // события /events/coming/
+                ]).each(function(key, value){
+                    $(value).append($(response).find(value).html());
+                });
+
+                // следующие сообщения в личке /users/%USERNAME%/mail/
+                nextPageRows = $(response).find(".inbox_page tbody");
+                nextPageRows.find("th").closest("tr").remove(); // кроме tr с заголовками
+                $(".inbox_page tbody").append(nextPageRows.html());
+
+                // и заменяем ссылки туда/сюда/страницы на новые
+                $(".page-nav").html($(".page-nav", response).html());
                 prepareAdvancedNextPageLink();
                 stopTrackingScrollToBottom = false; // описание флага будет ниже
             }
