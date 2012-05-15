@@ -7,6 +7,12 @@ $(function () {
             isEnabledTimedChecks: true,
             maxChecksForNew: 60,
             frequencyChecksForNew: 60,
+            highlightUnreadQAAnswers: false,
+            alwaysShowSubscribeCheckbox: false,
+            hideSocialButtons: false,
+            highlightTopicStarterComments: false,
+            addMoreLinksToPersonalStuff: false,
+            showKarma: false,
             nextPageDelay: 1
         };
         $.extend(extensionOptions, storedOptions);
@@ -49,6 +55,15 @@ function restoreOptions() {
             this.checked = extensionOptions[this.name];
         } else {
             this.value = extensionOptions[this.name];
+        }
+    });
+}
+
+function highlightTopicStarterComments() {
+    var authorNickname = $(".author a:first").text(); // :first потому что некоторые имеют G+ второй ссылкой :-/ http://habrahabr.ru/post/143680/
+    $('a.username').each(function() {
+        if ($(this).text() === authorNickname) {
+            $(this).closest(".info").addClass("topic-starter");
         }
     });
 }
