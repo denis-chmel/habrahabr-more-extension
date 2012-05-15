@@ -6,6 +6,9 @@
         "48":"images/icon48.png"
     },
     "options_page": "options.html",
+    "background": {
+        "scripts": ["background.js"]
+    },
     "content_scripts":[
         {
             "matches":["http://habrahabr.ru/*"],
