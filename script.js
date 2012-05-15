@@ -121,7 +121,7 @@ function setNewTopicsCount(count) {
         counterSpan.html(count + ' ' + topics);
         $(".new-posts .tsya").html(tsya);
     } else {
-        var settingsLink = 'chrome-extension://' + currentExtensionId;
+        var settingsLink = chrome.extension.getURL("options.html");
         if (getUsername()) {
             settingsLink = "http://habrahabr.ru/settings/more/"
         }
