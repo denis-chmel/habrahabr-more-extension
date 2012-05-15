@@ -129,7 +129,7 @@ function setNewTopicsCount(count) {
             '<div id="global_notify" class="new-posts">' +
                 '<div class="inner">' +
                     '<span class="buttons">'+
-                        '&nbsp;<input type="button" class="expand" value="Раскрыть">' +
+                        '&nbsp;<input type="button" class="expand" value="Показать">' +
                         '&nbsp;<input type="button" id="posts-check-now" class="preview" value="Проверить еще">&nbsp;' +
                         '&nbsp;<a href="' + settingsLink + '" target="_blank"><img src="' + chrome.extension.getURL('images/settings.png') + '"></a>'+
                         '</span>' +
