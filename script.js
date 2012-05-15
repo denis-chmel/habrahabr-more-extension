@@ -4,6 +4,24 @@ function onSettingsLoadedCallback() {
     addSectionToHabrSettings();
     prepareAdvancedNextPageLink();
     scheduleCheckingNewPosts(extensionOptions.maxChecksForNew);
+    if (extensionOptions.highlightUnreadQAAnswers) {
+        highlightUnreadQAAnswers();
+    }
+    if (extensionOptions.alwaysShowSubscribeCheckbox) {
+        alwaysShowSubscribeCheckbox();
+    }
+    if (extensionOptions.hideSocialButtons) {
+        hideSocialButtons();
+    }
+    if (extensionOptions.highlightTopicStarterComments) {
+        highlightTopicStarterComments();
+    }
+    if (extensionOptions.showKarma) {
+        showKarma(getUsername());
+    }
+    if (extensionOptions.addMoreLinksToPersonalStuff) {
+        addMoreLinksToPersonalStuff(getUsername());
+    }
 }
 
 function addSectionToHabrSettings() {
@@ -116,7 +134,7 @@ function setNewTopicsCount(count) {
                         '&nbsp;<a href="' + settingsLink + '" target="_blank"><img src="' + chrome.extension.getURL('images/settings.png') + '"></a>'+
                         '</span>' +
                 'Пока вы читали, на этой странице появи<span class="tsya">' + tsya + '</span> еще ' +
-                '<a class="count expand" href="#load">' + count + ' ' + topics + '</a>.' +
+                '<span class="count">' + count + ' ' + topics + '</span>' +
             '</div></div>'
     );
     }
@@ -240,4 +258,64 @@ $(document).keyup(function (e) {
 
 function getUsername() {
     return $("#header .username").text();
+}
+
+function getQATopicId() {
+    return window.location.href.match(/\/qa\/\d+\//g);
+}
+
+function highlightUnreadQAAnswers() {
+    var qaTopic = getQATopicId();
+    if (!qaTopic) {
+        return;
+    }
+    var maxAnswerId = lastAnswerId = localStorage.getItem(qaTopic + "answer");
+    var maxCommentId = lastCommentId = localStorage.getItem(qaTopic + "comment");
+    var userWasHereAlready = maxAnswerId !== null; // when something is cached already
+
+    $("div.answer > .info").each(function(){
+        var id = $(this).attr("rel");
+        maxAnswerId = Math.max(id, maxAnswerId);
+        if (userWasHereAlready && id > lastAnswerId) {
+            $(this).addClass("is_new");
+        }
+    });
+    $("div.comment_item").each(function(){
+        var id = $(this).attr("id").replace(/comment_/, '');
+        maxCommentId = Math.max(id, maxCommentId);
+        if (userWasHereAlready && id > lastCommentId) {
+            $(this).addClass("is_new");
+        }
+    });
+    localStorage.setItem(qaTopic + "answer", maxAnswerId || 0);
+    localStorage.setItem(qaTopic + "comment", maxCommentId || 0);
+    console.log(localStorage);
+}
+
+function alwaysShowSubscribeCheckbox() {
+    $(".infopanel").append($(".subscribe_comments"));
+}
+
+function hideSocialButtons() {
+    $(".infopanel .twitter").hide();
+    $(".infopanel .vkontakte").hide();
+    $(".infopanel .facebook").hide();
+    $(".infopanel .googleplus").hide();
+}
+
+function showKarma(username) {
+    $.get('http://habrahabr.ru/api/profile/' + username + '/', null, function(response){
+        $("#header .charge").prepend(
+            'Карма <span class="karma">' + $(response).find("karma").text() + '</span>' +
+                ', рейтинг <span class="rating">' + $(response).find("rating").text() + '</span>. ');
+    });
+}
+
+function addMoreLinksToPersonalStuff() {
+    var username = getUsername();
+    $("#header .bottom").append(
+        '<a href="/users/' + username + '/topics/">топики</a>' +
+            '<a href="/users/' + username + '/qa/questions/">вопросы</a>' +
+            '<a href="/users/' + username + '/comments/">комментарии</a>'
+    );
 }

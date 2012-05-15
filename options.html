@@ -11,7 +11,10 @@
             padding: 30px;
         }
         .user_settings {
-            width: 800px;
+            width: 600px;
+        }
+        input.narrow {
+            width: 70px;
         }
     </style>
     <script type="text/javascript" src="jquery.js"></script>
@@ -28,7 +31,7 @@
             Настройки экстеншна
             <a href="https://chrome.google.com/webstore/detail/glaccbllkhielccdhfbbpilnlbemgaji">Habr Ajax Paging</a>.
             По вопросам улучшений и ошибок пишите
-            <a href="http://habrahabr.ru/users/denver/" class="user_link">denver</a>
+            <a href="http://habrahabr.ru/users/denver/" class="user_link">denver</a>.<br/>
         </p>
 
         <br class="clear"/>
@@ -68,31 +71,35 @@
 
         <br class="clear"/>
 
-        <!--
-        <h2>Дополнительно</h2>
+        <h2>Другие улучшения</h2>
 
         <div class="item">
-            <label><input type="checkbox" checked="checked">Подсвечивать новые ответы в QA</label>
-            <div class="description">Работает только в одном браузере (потому что инфу хранит в localStorage, зато работает даже для незарегистрированных).</div>
+            <label><input type="checkbox" name="highlightUnreadQAAnswers" checked="checked">Подсвечивать новые ответы в QA</label>
+            <div class="description">Счетчики хранит в localStorage, поэтому подсвечивает только в одном браузере.</div>
         </div>
 
         <div class="item">
-            <label><input type="checkbox" checked="checked">Всегда показывать чекбокс для подписки на комментарии</label>
-            <div class="description">Обычно чекбокс появляется только если был хотя бы один ответ.</div>
+            <label><input type="checkbox" name="hideSocialButtons" checked="checked">Скрыть социальные кнопки у постов</label>
         </div>
 
         <div class="item">
-            <label><input type="checkbox" checked="checked">Скрыть социальные кнопки под постом</label>
+            <label><input type="checkbox" name="highlightTopicStarterComments" checked="checked">Выделять красненьким комментарии автора топика</label>
         </div>
 
         <div class="item">
-            <label><input type="checkbox" checked="checked">Выделять красненьким комментарии автора топика</label>
+            <label><input type="checkbox" name="alwaysShowSubscribeCheckbox" checked="checked">Всегда показывать чекбокс для подписки на комментарии</label>
+            <div class="description">Обычно чекбокс появляется только если был хотя бы один ответ. Не имеет смысла для незарегистрированных.</div>
         </div>
 
         <div class="item">
-            <label><input type="checkbox" checked="checked">Показывать карму и рейтинг на панели (под логином)</label>
+            <label><input type="checkbox" name="showKarma" checked="checked">Показывать карму и рейтинг на панели</label>
+            <div class="description">Выводит на панель рядом с логином. Не имеет смысла для незарегистрированных.</div>
         </div>
-        -->
+
+        <div class="item">
+            <label><input type="checkbox" name="addMoreLinksToPersonalStuff" checked="checked">Показывать ссылки на свои топики, комментарии, ответы</label>
+            <div class="description">Выводит на панель рядом с логином. Не имеет смысла для незарегистрированных.</div>
+        </div>
 
         <div class="buttons">
             <input class="habr-more-save" type="submit" value="Сохранить">&nbsp;<span class="habr-more-save-ok" style="display: none">Успешно сохранено</span>

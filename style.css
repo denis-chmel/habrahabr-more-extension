@@ -54,5 +54,26 @@ input.narrow {
     float: right;
 }
 .habr-more-save-ok {
+    color: green;
     font-size: 11px;
+}
+html a.user_link {
+    font-size: 100%;
+}
+
+div.answer > .info.is_new {
+    background: #E8E8FF;
+}
+div.comment_item.is_new {
+    background: #E8E8FF;
+    padding: 1ex 2ex;
+}
+.topic-starter {
+    background: #fff6f7;
+}
+.topic-starter.is_new {
+    background: #fdd9dd !important;
+}
+.karma, .rating {
+    color: green;
 }
