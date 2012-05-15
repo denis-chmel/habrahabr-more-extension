@@ -1,10 +1,10 @@
 var currentExtensionId = chrome.extension.getURL('').match(/[a-z]{32}/)[0];
 
-$(function () {
+function onSettingsLoadedCallback() {
     addSectionToHabrSettings();
     prepareAdvancedNextPageLink();
-    scheduleCheckingNewPosts(options.maxChecksForNew);
-});
+    scheduleCheckingNewPosts(extensionOptions.maxChecksForNew);
+}
 
 function addSectionToHabrSettings() {
     var isOnAjaxSettings = window.location.href.match(/\/settings\/more\//);
@@ -26,7 +26,7 @@ function addSectionToHabrSettings() {
 }
 
 function scheduleCheckingNewPosts(limit) {
-    if (options.isEnabledTimedChecks == "false") {
+    if (!extensionOptions.isEnabledTimedChecks) {
         return;
     }
     $("#warning-suspended-checks").remove();
@@ -38,11 +38,11 @@ function scheduleCheckingNewPosts(limit) {
             } else {
                 $(".new-posts .inner").append(
                     '<span id="warning-suspended-checks"><br>Проверка приостановлена, т.к. вас не было около '
-                        + Math.ceil(options.maxChecksForNew * options.frequencyChecksForNew / 60) + " минут." + '</span>'
+                        + Math.ceil(extensionOptions.maxChecksForNew * extensionOptions.frequencyChecksForNew / 60) + " минут." + '</span>'
                 );
             }
         });
-    }, options.frequencyChecksForNew * 1000);
+    }, extensionOptions.frequencyChecksForNew * 1000);
 }
 
 function checkForNewPosts(afterCheckCallback) {
@@ -140,13 +140,13 @@ Array.prototype.diff = function (a) {
 };
 
 $(document).on("click", "#posts-check-now", function () {
-    scheduleCheckingNewPosts(options.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
+    scheduleCheckingNewPosts(extensionOptions.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
     checkForNewPosts();
     return false;
 });
 
 $(document).on("click", ".new-posts .expand", function () {
-    scheduleCheckingNewPosts(options.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
+    scheduleCheckingNewPosts(extensionOptions.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
     var newPosts = getHiddenNewPosts();
     $(".loaded-before").remove(); // удаляем предыдущий разделитель
     newPosts.show().last().after('<p class="loaded-before">Загруженные ранее:</p>');
@@ -189,7 +189,7 @@ $(document).on("click", "#next_page", function () {
                 stopTrackingScrollEvent = false;
             }
         });
-    }, 1000 * options.nextPageDelay); // начать через N секунд, чтобы юзер мог успеть отменить
+    }, 1000 * extensionOptions.nextPageDelay); // начать через N секунд, чтобы юзер мог успеть отменить
     return false;
 });
 
@@ -226,7 +226,7 @@ $(window).scroll(function () {
     }
     if ($(window).scrollTop() == 0) { // юзер доскроллил до начала странцы
         stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
-        scheduleCheckingNewPosts(options.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
+        scheduleCheckingNewPosts(extensionOptions.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
         checkForNewPosts();
     }
 });

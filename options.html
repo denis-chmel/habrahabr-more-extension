@@ -18,7 +18,7 @@
     <script type="text/javascript" src="settings.js"></script>
 </head>
 
-<body onload="restoreOptions()">
+<body>
 
 <div><div class="user_settings">
 
@@ -44,14 +44,14 @@
                 <td>
                     <div class="item">
                         <label for="frequencyChecksForNew">Проверять раз в</label>
-                        <input type="number" class="narrow" value="60" id="frequencyChecksForNew" name="frequencyChecksForNew" min="5"> секунд
+                        <input type="number" class="narrow" value="" id="frequencyChecksForNew" name="frequencyChecksForNew" min="5"> секунд
                     </div>
                 </td>
                 <td width="20"></td>
                 <td>
                     <div class="item">
                         <label for="maxChecksForNew">Остановиться после</label>
-                        <input type="number" class="narrow" value="60" id="maxChecksForNew" name="maxChecksForNew" min="0"> проверок
+                        <input type="number" class="narrow" value="" id="maxChecksForNew" name="maxChecksForNew" min="0"> проверок
                     </div>
                 </td>
             </tr>
@@ -62,7 +62,7 @@
         <h2>Подгрузка следующей страницы</h2>
 
         <div class="item">
-            Подождать <input type="number" class="narrow" name="nextPageDelay" id="nextPageDelay" value="1" min="0"> секунд
+            Подождать <input type="number" class="narrow" name="nextPageDelay" id="nextPageDelay" value="" min="0"> секунд
             <div class="description">Чтобы успеть отменить запрос/вставку нажатием на красную кнопку или &lt;Esc&gt;</div>
         </div>
 
@@ -102,6 +102,11 @@
 
 </div></div>
 
+<script type="text/javascript">
+    function onSettingsLoadedCallback() {
+        restoreOptions();
+    }
+</script>
 
 </body>
 </html>
