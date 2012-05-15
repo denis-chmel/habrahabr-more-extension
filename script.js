@@ -1,29 +1,52 @@
-var MAX_CHECKS_FOR_NEW_POSTS = 60; // times, to not waste traffic if user is AFK. Counts only timered checks. Doesn't count checks when user scrolls to top.
-var CHECK_FOR_NEW_POSTS_EACH = 60; // seconds
+var currentExtensionId = chrome.extension.getURL('').match(/[a-z]{32}/)[0];
 
 $(function () {
+    addSectionToHabrSettings();
     prepareAdvancedNextPageLink();
-    startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS);
+    scheduleCheckingNewPosts(options.maxChecksForNew);
 });
 
-function startCheckingNewPosts(limit) {
+function addSectionToHabrSettings() {
+    var isOnAjaxSettings = window.location.href.match(/\/settings\/more\//);
+    if (window.location.href.match(/\/settings\//g)) {
+        $("table.menu tr").append(
+            '<td class="item ">' +
+            '<a href="http://habrahabr.ru/settings/more/"><span class="name">More</span></a>' +
+            '</td>'
+        );
+        if (isOnAjaxSettings) {
+            $("table.menu td").removeClass("active").last().addClass("active");
+            $(".user_settings").html('<img src="' + chrome.extension.getURL('images/ajax.gif') + '"/>');
+            $.get('chrome-extension://' + currentExtensionId + '/options.html', null, function(response) {
+                $(".user_settings").html($(response).find(".user_settings").html());
+                restoreOptions();
+            });
+        }
+    }
+}
+
+function scheduleCheckingNewPosts(limit) {
+    if (options.isEnabledTimedChecks == "false") {
+        return;
+    }
     $("#warning-suspended-checks").remove();
     clearTimeout(window.checkNewPostsTimer); // должен существовать только один таймер
     window.checkNewPostsTimer = setTimeout(function () {
         checkForNewPosts(function () {
-            if (limit > 0) {
-                startCheckingNewPosts(limit - 1); // re-schedule itself
+            if (limit > 1) {
+                scheduleCheckingNewPosts(limit - 1); // re-schedule itself
             } else {
                 $(".new-posts .inner").append(
-                    '<p id="warning-suspended-checks"><br>Автоматическая проверка приостановлена, поскольку вас не было около '
-                        + Math.ceil(MAX_CHECKS_FOR_NEW_POSTS * CHECK_FOR_NEW_POSTS_EACH / 60) + " минут." + '</p>'
+                    '<span id="warning-suspended-checks"><br>Проверка приостановлена, т.к. вас не было около '
+                        + Math.ceil(options.maxChecksForNew * options.frequencyChecksForNew / 60) + " минут." + '</span>'
                 );
             }
         });
-    }, CHECK_FOR_NEW_POSTS_EACH * 1000);
+    }, options.frequencyChecksForNew * 1000);
 }
 
 function checkForNewPosts(afterCheckCallback) {
+    $("#posts-check-now").attr("disabled", true);
     if ($(".posts").length == 0) {
         // это вообще не страница с постами, уходим
         return;
@@ -32,6 +55,7 @@ function checkForNewPosts(afterCheckCallback) {
     $.ajax({
         url:window.location.href,
         success:function (response) {
+            $("#posts-check-now").removeAttr("disabled");
             $(".new-posts-ajax").remove();
             // Находим все айдишники постов на текущей странице и сравниваем с айишниками в ответе
             var oldPostIds = getPostIds();
@@ -79,12 +103,22 @@ function setNewTopicsCount(count) {
         counterSpan.html(count + ' ' + topics);
         $(".new-posts .tsya").html(tsya);
     } else {
+        var settingsLink = 'chrome-extension://' + currentExtensionId;
+        if (getUsername()) {
+            settingsLink = "http://habrahabr.ru/settings/more/"
+        }
         $(".posts").prepend(
-            '<div id="global_notify" class="new-posts"><div class="inner">' +
+            '<div id="global_notify" class="new-posts">' +
+                '<div class="inner">' +
+                    '<span class="buttons">'+
+                        '&nbsp;<input type="button" class="expand" value="Раскрыть">' +
+                        '&nbsp;<input type="button" id="posts-check-now" class="preview" value="Проверить еще">&nbsp;' +
+                        '&nbsp;<a href="' + settingsLink + '" target="_blank"><img src="' + chrome.extension.getURL('images/settings.png') + '"></a>'+
+                        '</span>' +
                 'Пока вы читали, на этой странице появи<span class="tsya">' + tsya + '</span> еще ' +
-                '<a class="count" href="#load">' + count + ' ' + topics + '</a>' + ' (<a href="#checknow" id="posts-check-now">проверить снова</a>)' +
-                '</div></div>'
-        );
+                '<a class="count expand" href="#load">' + count + ' ' + topics + '</a>.' +
+            '</div></div>'
+    );
     }
     // Add badge to the favicon
     Tinycon.setBubble(count);
@@ -106,13 +140,13 @@ Array.prototype.diff = function (a) {
 };
 
 $(document).on("click", "#posts-check-now", function () {
-    startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS); // пролонгируем лимит проверки, поскольку юзер жив
+    scheduleCheckingNewPosts(options.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
     checkForNewPosts();
     return false;
 });
 
-$(document).on("click", ".new-posts a.count", function () {
-    startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS); // пролонгируем лимит проверки, поскольку юзер жив
+$(document).on("click", ".new-posts .expand", function () {
+    scheduleCheckingNewPosts(options.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
     var newPosts = getHiddenNewPosts();
     $(".loaded-before").remove(); // удаляем предыдущий разделитель
     newPosts.show().last().after('<p class="loaded-before">Загруженные ранее:</p>');
@@ -155,7 +189,7 @@ $(document).on("click", "#next_page", function () {
                 stopTrackingScrollEvent = false;
             }
         });
-    }, 1000); // начать через 1 секунду, чтобы юзер мог успеть отменить
+    }, 1000 * options.nextPageDelay); // начать через N секунд, чтобы юзер мог успеть отменить
     return false;
 });
 
@@ -192,7 +226,7 @@ $(window).scroll(function () {
     }
     if ($(window).scrollTop() == 0) { // юзер доскроллил до начала странцы
         stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
-        startCheckingNewPosts(MAX_CHECKS_FOR_NEW_POSTS); // пролонгируем лимит проверки, поскольку юзер жив
+        scheduleCheckingNewPosts(options.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
         checkForNewPosts();
     }
 });
@@ -203,3 +237,7 @@ $(document).keyup(function (e) {
         $('.more-posts .cancel').click();
     }
 });
+
+function getUsername() {
+    return $("#header .username").text();
+}

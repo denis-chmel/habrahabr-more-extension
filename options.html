@@ -1,0 +1,107 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Настройка Habr Ajax Paging</title>
+    <link href="http://habrahabr.ru/styles/all.css" rel="stylesheet" media="all"/>
+    <link href="http://habrahabr.ru/styles/forms.css" rel="stylesheet" media="all"/>
+    <link href="http://habrahabr.ru/styles/settings/all.css" rel="stylesheet" media="all"/>
+    <style type="text/css">
+        body {
+            text-align: left;
+            padding: 30px;
+        }
+        .user_settings {
+            width: 800px;
+        }
+    </style>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="settings.js"></script>
+</head>
+
+<body onload="restoreOptions()">
+
+<div><div class="user_settings">
+
+    <form id="habr-more-settings" action=".">
+
+        <p>
+            Настройки экстеншна
+            <a href="https://chrome.google.com/webstore/detail/glaccbllkhielccdhfbbpilnlbemgaji">Habr Ajax Paging</a>.
+            По вопросам улучшений и ошибок пишите
+            <a href="http://habrahabr.ru/users/denver/" class="user_link">denver</a>
+        </p>
+
+        <br class="clear"/>
+
+        <h2>Подгрузка новых постов</h2>
+
+        <div class="item">
+            <label><input type="checkbox" name="isEnabledTimedChecks" checked="checked">Включить регулярную проверку</label>
+        </div>
+
+        <table>
+            <tr>
+                <td>
+                    <div class="item">
+                        <label for="frequencyChecksForNew">Проверять раз в</label>
+                        <input type="number" class="narrow" value="60" id="frequencyChecksForNew" name="frequencyChecksForNew" min="5"> секунд
+                    </div>
+                </td>
+                <td width="20"></td>
+                <td>
+                    <div class="item">
+                        <label for="maxChecksForNew">Остановиться после</label>
+                        <input type="number" class="narrow" value="60" id="maxChecksForNew" name="maxChecksForNew" min="0"> проверок
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <br class="clear"/>
+
+        <h2>Подгрузка следующей страницы</h2>
+
+        <div class="item">
+            Подождать <input type="number" class="narrow" name="nextPageDelay" id="nextPageDelay" value="1" min="0"> секунд
+            <div class="description">Чтобы успеть отменить запрос/вставку нажатием на красную кнопку или &lt;Esc&gt;</div>
+        </div>
+
+        <br class="clear"/>
+
+        <!--
+        <h2>Дополнительно</h2>
+
+        <div class="item">
+            <label><input type="checkbox" checked="checked">Подсвечивать новые ответы в QA</label>
+            <div class="description">Работает только в одном браузере (потому что инфу хранит в localStorage, зато работает даже для незарегистрированных).</div>
+        </div>
+
+        <div class="item">
+            <label><input type="checkbox" checked="checked">Всегда показывать чекбокс для подписки на комментарии</label>
+            <div class="description">Обычно чекбокс появляется только если был хотя бы один ответ.</div>
+        </div>
+
+        <div class="item">
+            <label><input type="checkbox" checked="checked">Скрыть социальные кнопки под постом</label>
+        </div>
+
+        <div class="item">
+            <label><input type="checkbox" checked="checked">Выделять красненьким комментарии автора топика</label>
+        </div>
+
+        <div class="item">
+            <label><input type="checkbox" checked="checked">Показывать карму и рейтинг на панели (под логином)</label>
+        </div>
+        -->
+
+        <div class="buttons">
+            <input class="habr-more-save" type="submit" value="Сохранить">&nbsp;<span class="habr-more-save-ok" style="display: none">Успешно сохранено</span>
+        </div>
+
+    </form>
+
+</div></div>
+
+
+</body>
+</html>

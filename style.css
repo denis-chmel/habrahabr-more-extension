@@ -35,12 +35,24 @@
 }
 
 .new-posts-ajax {
-	position: absolute; margin: 8px 0 0 -30px;
+    position: absolute; margin: 8px 0 0 -30px;
 }
 
 .loaded-before {
     color: #CCC;
     font-size: 160%;
-    marg1in-top: 80px;
     margin-bottom: 20px;
+}
+input.narrow {
+    width: 70px;
+}
+.new-posts {
+    line-height: 1.6;
+}
+.new-posts .buttons {
+    margin-top: -8px;
+    float: right;
+}
+.habr-more-save-ok {
+    font-size: 11px;
 }
