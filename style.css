@@ -21,13 +21,16 @@
     display: block;
 }
 
+.inbox_page .next-prev .buttons {
+    padding-top: 0;
+}
 .next-prev .cancel {
-    background: #A00;
-    color: #FFF;
+    background: #A00 !important;
+    color: #FFF !important;
 }
 
 .next-prev .cancel:hover {
-    background: #D00;
+    background: #D00 !important;
 }
 
 #global_notify.new-posts .inner {
