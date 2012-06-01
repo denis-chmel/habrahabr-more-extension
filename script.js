@@ -29,13 +29,13 @@ function addSectionToHabrSettings() {
     if (window.location.href.match(/\/settings\//g)) {
         $("table.menu tr").append(
             '<td class="item ">' +
-            '<a href="http://habrahabr.ru/settings/more/"><span class="name">More</span></a>' +
-            '</td>'
+                '<a href="http://habrahabr.ru/settings/more/"><span class="name">More</span></a>' +
+                '</td>'
         );
         if (isOnAjaxSettings) {
             $("table.menu td").removeClass("active").last().addClass("active");
             $(".user_settings").html('<img src="' + chrome.extension.getURL('images/ajax.gif') + '"/>');
-            $.get('chrome-extension://' + currentExtensionId + '/options.html', null, function(response) {
+            $.get('chrome-extension://' + currentExtensionId + '/options.html', null, function (response) {
                 $(".user_settings").html($(response).find(".user_settings").html());
                 restoreOptions();
             });
@@ -91,10 +91,17 @@ function getHiddenNewPosts() {
 }
 
 function updateOldPosts(oldPostIds, fromHTML) {
+    // iframe
     for (var i = 0; i < oldPostIds.length; i++) {
         var newPost = $("#" + oldPostIds[i], fromHTML);
+        var oldPost = $("#" + oldPostIds[i]);
+        if (oldPost.find("iframe").length) {
+            // Не обновлять весь пост с видео-роликом, во избежание остановки плеера
+            oldPost.find(".infopanel").html(newPost.find(".infopanel").html());
+            continue;
+        }
         if (newPost.length) {
-            $("#" + oldPostIds[i]).html(newPost.html());
+            oldPost.html(newPost.html());
         }
     }
 }
@@ -128,15 +135,15 @@ function setNewTopicsCount(count) {
         $(".posts").prepend(
             '<div id="global_notify" class="new-posts">' +
                 '<div class="inner">' +
-                    '<span class="buttons">'+
-                        '&nbsp;<input type="button" class="expand" value="Показать">' +
-                        '&nbsp;<input type="button" id="posts-check-now" class="preview" value="Проверить еще">&nbsp;' +
-                        '&nbsp;<a href="' + settingsLink + '" target="_blank"><img src="' + chrome.extension.getURL('images/settings.png') + '"></a>'+
-                        '</span>' +
+                '<span class="buttons">' +
+                '&nbsp;<input type="button" class="expand" value="Показать">' +
+                '&nbsp;<input type="button" id="posts-check-now" class="preview" value="Проверить еще">&nbsp;' +
+                '&nbsp;<a href="' + settingsLink + '" target="_blank"><img src="' + chrome.extension.getURL('images/settings.png') + '"></a>' +
+                '</span>' +
                 'Пока вы читали, на этой странице появи<span class="tsya">' + tsya + '</span> еще ' +
                 '<span class="count">' + count + ' ' + topics + '</span>' +
-            '</div></div>'
-    );
+                '</div></div>'
+        );
     }
     // Add badge to the favicon
     Tinycon.setBubble(count);
@@ -187,14 +194,15 @@ $(document).on("click", "#next_page", function () {
                 nextPrevBlock.removeClass("started"); // убираем флаг
 
                 $([
+                    ".comments_list", // догружаем комментарии /users/boomburum/comments/
                     ".posts", // догружаем посты (большинство страниц)
                     ".users", // юзеров на /users/
                     ".hubs_list .hubs", // блоги на /hubs/
                     ".companies", // /companies/
                     ".events_list:not(.posts_list)" // события /events/coming/ (исключение :not для /feed/new/, где есть оба: class="posts_list events_list")
                 ]).each(function (key, value) {
-                    $(value).append($(response).find(value).html());
-                });
+                        $(value).append($(response).find(value).html());
+                    });
 
                 // сообщения в личке /users/%USERNAME%/mail/
                 var nextPageRows = $(response).find(".inbox_page tbody");
@@ -273,14 +281,14 @@ function highlightUnreadQAAnswers() {
     var maxCommentId = lastCommentId = localStorage.getItem(qaTopic + "comment");
     var userWasHereAlready = maxAnswerId !== null; // when something is cached already
 
-    $("div.answer > .info").each(function(){
+    $("div.answer > .info").each(function () {
         var id = $(this).attr("rel");
         maxAnswerId = Math.max(id, maxAnswerId);
         if (userWasHereAlready && id > lastAnswerId) {
             $(this).addClass("is_new");
         }
     });
-    $("div.comment_item").each(function(){
+    $("div.comment_item").each(function () {
         var id = $(this).attr("id").replace(/comment_/, '');
         maxCommentId = Math.max(id, maxCommentId);
         if (userWasHereAlready && id > lastCommentId) {
@@ -304,7 +312,7 @@ function hideSocialButtons() {
 }
 
 function showKarma(username) {
-    $.get('http://habrahabr.ru/api/profile/' + username + '/', null, function(response){
+    $.get('http://habrahabr.ru/api/profile/' + username + '/', null, function (response) {
         $("#header .charge").prepend(
             'Карма <span class="karma">' + $(response).find("karma").text() + '</span>' +
                 ', рейтинг <span class="rating">' + $(response).find("rating").text() + '</span>. ');
