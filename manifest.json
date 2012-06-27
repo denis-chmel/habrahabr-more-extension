@@ -1,6 +1,6 @@
 {
     "name":"Habrahabr More",
-    "version":"1.3.3",
+    "version":"1.3.4",
     "description":"Бывший Habrahabr Ajax Paging. Добавляет к Хабру AJAX и другие улучшения",
     "icons":{
         "48":"images/icon48.png"
