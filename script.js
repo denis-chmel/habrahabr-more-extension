@@ -277,19 +277,21 @@ function highlightUnreadQAAnswers() {
     if (!qaTopic) {
         return;
     }
-    var maxAnswerId = lastAnswerId = localStorage.getItem(qaTopic + "answer");
-    var maxCommentId = lastCommentId = localStorage.getItem(qaTopic + "comment");
+    var maxAnswerId = localStorage.getItem(qaTopic + "answer");
+    var maxCommentId = localStorage.getItem(qaTopic + "comment");
     var userWasHereAlready = maxAnswerId !== null; // when something is cached already
+    maxAnswerId = lastAnswerId = parseInt(maxAnswerId); // for correct int comparison below
+    maxCommentId = lastCommentId = parseInt(maxCommentId);
 
     $("div.answer > .info").each(function () {
-        var id = $(this).attr("rel");
+        var id = parseInt($(this).attr("rel"));
         maxAnswerId = Math.max(id, maxAnswerId);
         if (userWasHereAlready && id > lastAnswerId) {
             $(this).addClass("is_new");
         }
     });
     $("div.comment_item").each(function () {
-        var id = $(this).attr("id").replace(/comment_/, '');
+        var id = parseInt($(this).attr("id").replace(/comment_/, ''));
         maxCommentId = Math.max(id, maxCommentId);
         if (userWasHereAlready && id > lastCommentId) {
             $(this).addClass("is_new");
@@ -297,7 +299,6 @@ function highlightUnreadQAAnswers() {
     });
     localStorage.setItem(qaTopic + "answer", maxAnswerId || 0);
     localStorage.setItem(qaTopic + "comment", maxCommentId || 0);
-    console.log(localStorage);
 }
 
 function alwaysShowSubscribeCheckbox() {
