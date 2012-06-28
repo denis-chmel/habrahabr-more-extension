@@ -280,8 +280,8 @@ function highlightUnreadQAAnswers() {
     var maxAnswerId = localStorage.getItem(qaTopic + "answer");
     var maxCommentId = localStorage.getItem(qaTopic + "comment");
     var userWasHereAlready = maxAnswerId !== null; // when something is cached already
-    maxAnswerId = lastAnswerId = parseInt(maxAnswerId); // for correct int comparison below
-    maxCommentId = lastCommentId = parseInt(maxCommentId);
+    maxAnswerId = lastAnswerId = parseInt(maxAnswerId) || 0; // for correct int comparison below
+    maxCommentId = lastCommentId = parseInt(maxCommentId) || 0; // parseInt(null) is NaN, using 0 instead
 
     $("div.answer > .info").each(function () {
         var id = parseInt($(this).attr("rel"));
@@ -297,8 +297,8 @@ function highlightUnreadQAAnswers() {
             $(this).addClass("is_new");
         }
     });
-    localStorage.setItem(qaTopic + "answer", maxAnswerId || 0);
-    localStorage.setItem(qaTopic + "comment", maxCommentId || 0);
+    localStorage.setItem(qaTopic + "answer", maxAnswerId);
+    localStorage.setItem(qaTopic + "comment", maxCommentId);
 }
 
 function alwaysShowSubscribeCheckbox() {
