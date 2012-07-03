@@ -21,7 +21,9 @@
     display: block;
 }
 
+.tracker_page .next-prev .buttons,
 .inbox_page .next-prev .buttons {
+    /* dirty fix for "Stop, no more" to not overlap 1,2,3,4,... on tracker & PM pages (seems they have different CSS for paging there) */
     padding-top: 0;
 }
 .next-prev .cancel {
