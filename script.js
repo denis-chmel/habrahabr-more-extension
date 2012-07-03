@@ -201,13 +201,18 @@ $(document).on("click", "#next_page", function () {
                     ".companies", // /companies/
                     ".events_list:not(.posts_list)" // события /events/coming/ (исключение :not для /feed/new/, где есть оба: class="posts_list events_list")
                 ]).each(function (key, value) {
-                        $(value).append($(response).find(value).html());
-                    });
+                    $(value).append($(response).find(value).html());
+                });
 
-                // сообщения в личке /users/%USERNAME%/mail/
-                var nextPageRows = $(response).find(".inbox_page tbody");
-                nextPageRows.find("th").closest("tr").remove(); // кроме tr с заголовками
-                $(".inbox_page tbody").append(nextPageRows.html());
+                $([
+                    ".tracker_comments tbody", // записи в трекере /tracker/
+                    ".tracker_folowers tbody", // записи в трекере /tracker/subscribers/
+                    ".inbox_page tbody" // сообщения в личке /users/%USERNAME%/mail/
+                ]).each(function (key, value) {
+                    var nextPageRows = $(response).find(value);
+                    nextPageRows.find("th").closest("tr").remove(); // кроме tr с заголовками
+                    $(value).append(nextPageRows.html());
+                });
 
                 // заменяем блок туда/сюда/пэйджинг на новый
                 $(".page-nav").html($(".page-nav", response).html());
