@@ -22,6 +22,9 @@ function onSettingsLoadedCallback() {
     if (extensionOptions.addMoreLinksToPersonalStuff) {
         addMoreLinksToPersonalStuff(getUsername());
     }
+    if (extensionOptions.getScoreForAllPosts) {
+        getScoreForAllPosts();
+    }
 }
 
 function addSectionToHabrSettings() {
@@ -111,6 +114,9 @@ function addNewPostsAsHidden(postIds, fromHTML) {
         newPost = $("#" + postIds[i], fromHTML);
         newPost.hide(); // будут показаны когда юзер попросит
         $(".posts").prepend(newPost);
+    }
+    if (extensionOptions.getScoreForAllPosts) {
+        getScoreForAllPosts();
     }
     setNewTopicsCount(getHiddenNewPosts().length); // перевыставляем бэйджик
 }
@@ -213,6 +219,10 @@ $(document).on("click", "#next_page", function () {
                     nextPageRows.find("th").closest("tr").remove(); // кроме tr с заголовками
                     $(value).append(nextPageRows.html());
                 });
+
+                if (extensionOptions.getScoreForAllPosts) {
+                    getScoreForAllPosts();
+                }
 
                 // заменяем блок туда/сюда/пэйджинг на новый
                 $(".page-nav").html($(".page-nav", response).html());
@@ -332,4 +342,8 @@ function addMoreLinksToPersonalStuff() {
             '<a href="/users/' + username + '/qa/questions/">вопросы</a>' +
             '<a href="/users/' + username + '/comments/">комментарии</a>'
     );
+}
+
+function getScoreForAllPosts() {
+    $(".score").click().prop("onclick", "");
 }

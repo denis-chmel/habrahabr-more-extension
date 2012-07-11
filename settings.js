@@ -7,12 +7,13 @@ $(function () {
             isEnabledTimedChecks: true,
             maxChecksForNew: 60,
             frequencyChecksForNew: 60,
-            highlightUnreadQAAnswers: false,
-            alwaysShowSubscribeCheckbox: false,
+            highlightUnreadQAAnswers: true,
+            alwaysShowSubscribeCheckbox: true,
+            highlightTopicStarterComments: true,
+            addMoreLinksToPersonalStuff: true,
+            showKarma: true,
             hideSocialButtons: false,
-            highlightTopicStarterComments: false,
-            addMoreLinksToPersonalStuff: false,
-            showKarma: false,
+            getScoreForAllPosts: false,
             nextPageDelay: 1
         };
         $.extend(extensionOptions, storedOptions);
