@@ -213,6 +213,7 @@ $(document).on("click", "#next_page", function () {
                 $([
                     ".tracker_comments tbody", // записи в трекере /tracker/
                     ".tracker_folowers tbody", // записи в трекере /tracker/subscribers/
+                    ".tracker_mentions tbody", // записи в трекере /tracker/mentions/
                     ".inbox_page tbody" // сообщения в личке /users/%USERNAME%/mail/
                 ]).each(function (key, value) {
                     var nextPageRows = $(response).find(value);
@@ -329,7 +330,7 @@ function hideSocialButtons() {
 
 function showKarma(username) {
     $.get('http://habrahabr.ru/api/profile/' + username + '/', null, function (response) {
-        $("#header .charge").prepend(
+        $("#charge_string").removeAttr("id").prepend(
             'Карма <span class="karma">' + $(response).find("karma").text() + '</span>' +
                 ', рейтинг <span class="rating">' + $(response).find("rating").text() + '</span>. ');
     });
@@ -345,5 +346,5 @@ function addMoreLinksToPersonalStuff() {
 }
 
 function getScoreForAllPosts() {
-    $(".score").click().prop("onclick", "");
+    $(".infopanel .score").click().prop("onclick", "");
 }
