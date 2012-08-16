@@ -318,7 +318,7 @@ function highlightUnreadQAAnswers() {
 }
 
 function alwaysShowSubscribeCheckbox() {
-    $(".infopanel").append($(".subscribe_comments"));
+    $(".infopanel").append($(".title .subscribe_comments"));
 }
 
 function hideSocialButtons() {
