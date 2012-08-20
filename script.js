@@ -201,7 +201,7 @@ $(document).on("click", "#next_page", function () {
 
                 $([
                     ".comments_list", // догружаем комментарии /users/boomburum/comments/
-                    ".posts", // догружаем посты (большинство страниц)
+                    ".posts:not(.events_list)", // догружаем посты (большинство страниц)
                     ".users", // юзеров на /users/
                     ".hubs_list .hubs", // блоги на /hubs/
                     ".companies", // /companies/
@@ -339,8 +339,9 @@ function showKarma(username) {
 function addMoreLinksToPersonalStuff() {
     var username = getUsername();
     $("#header .bottom").append(
-        '<a href="/users/' + username + '/topics/">топики</a>' +
+        '<a href="/users/' + username + '/topics/">посты</a>' +
             '<a href="/users/' + username + '/qa/questions/">вопросы</a>' +
+            '<a href="/users/' + username + '/qa/answers/">ответы</a>' +
             '<a href="/users/' + username + '/comments/">комментарии</a>'
     );
 }
