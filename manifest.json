@@ -1,25 +1,30 @@
 {
-    "manifest_version": 2,
-    "name":"Habrahabr More",
-    "version":"2.0.1",
-    "description":"Добавляет к Хабру AJAX paging и другие улучшения",
-    "icons":{
-        "48":"images/icon48.png"
-    },
-    "options_page": "options.html",
-    "background": {
-        "scripts": ["background.js"]
-    },
-    "content_scripts":[
-        {
-            "matches":["http://habrahabr.ru/*"],
-            "css":["style.css"],
-            "js":["jquery.js", "tinycon.js", "settings.js", "script.js"]
-        }
-    ],
-    "web_accessible_resources": [
-        "images/ajax.gif",
-        "images/settings.png",
-        "options.html"
-    ]
+  "manifest_version": 2,
+  "name": "Habrahabr More",
+  "version": "2.0.2",
+  "description": "Добавляет к Хабру AJAX paging и другие улучшения",
+  "icons": {
+    "48": "images/icon48.png"
+  },
+  "options_page": "options.html",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://habrahabr.ru/*"],
+      "css": ["style.css"],
+      "js": [
+        "jquery.js",
+        "tinycon.js",
+        "settings.js",
+        "script.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "images/ajax.gif",
+    "images/settings.png",
+    "options.html"
+  ]
 }

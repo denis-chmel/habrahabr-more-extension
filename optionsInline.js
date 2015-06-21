@@ -3,5 +3,5 @@
  * http://developer.chrome.com/extensions/contentSecurityPolicy.html
  */
 function onSettingsLoadedCallback() {
-    restoreOptions();
+	restoreOptions();
 }

@@ -1,43 +1,44 @@
 .next-prev {
-    height: 32px;
+	height: 32px;
 }
 
 .next-prev .more-posts .buttons {
-    position: absolute;
-    margin-left: -30px;
-    padding-left: 30px;
-    background: url("images/ajax.gif") left center no-repeat;
+	position: absolute;
+	margin-left: -30px;
+	padding-left: 30px;
+	background: url("images/ajax.gif") left center no-repeat;
 }
 
 .next-prev .more-posts {
-    display: none;
+	display: none;
 }
 
 .next-prev.started li {
-    display: none;
+	display: none;
 }
 
 .next-prev.started li.more-posts {
-    display: block;
+	display: block;
 }
 
 .tracker_page .next-prev .buttons,
 .inbox_page .next-prev .buttons {
-    /* dirty fix for "Stop, no more" to not overlap 1,2,3,4,... on tracker & PM pages (seems they have different CSS for paging there) */
-    padding-top: 0;
+	/* dirty fix for "Stop, no more" to not overlap 1,2,3,4,... on tracker & PM pages (seems they have different CSS for paging there) */
+	padding-top: 0;
 }
+
 .next-prev .cancel {
 	text-shadow: none;
-    background: #A00 !important;
-    color: #FFF !important;
+	background: #A00 !important;
+	color: #FFF !important;
 }
 
 .next-prev .cancel:hover {
-    background: #D00 !important;
+	background: #D00 !important;
 }
 
 #new-posts > div {
-    background: #E8E8FF;
+	background: #E8E8FF;
 	padding: 15px;
 	margin: 20px auto;
 	font-size: 14px;
@@ -58,52 +59,71 @@
 }
 
 .loaded-before {
-    color: #CCC;
-    font-size: 160%;
-    margin-bottom: 20px;
+	color: #CCC;
+	font-size: 160%;
+	margin-bottom: 20px;
 }
+
 input.narrow {
-    width: 70px;
+	width: 70px;
 }
+
 .new-posts {
-    line-height: 1.6;
+	line-height: 1.6;
 }
+
 .new-posts .buttons {
-    margin-top: -8px;
-    float: right;
+	margin-top: -8px;
+	float: right;
 }
+
 .habr-more-save-ok {
-    color: green;
-    font-size: 11px;
+	color: green;
+	font-size: 11px;
 }
+
 html a.user_link {
-    font-size: 100%;
+	font-size: 100%;
 }
 
 div.answer > .info.is_new {
-    background: #E8E8FF;
+	background: #E8E8FF;
 }
+
 div.comment_item.is_new {
-    background: #E8E8FF;
-    padding: 1ex 2ex;
+	background: #E8E8FF;
+	padding: 1ex 2ex;
 }
+
 .topic-starter {
-    background: #fff6f7;
+	background: #fff6f7;
 }
+
 .topic-starter.is_new {
-    background: #fdd9dd !important;
+	background: #fdd9dd !important;
 }
+
 .karma, .rating {
-    color: green;
+	color: green;
 }
 
 .spinning {
-	-webkit-animation:spin 1s linear infinite;
-	animation:spin 1s linear infinite;
+	-webkit-animation: spin 1s linear infinite;
+	animation: spin 1s linear infinite;
 }
 
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes spin {
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
 
 .toggle-footer {
 	display: block;

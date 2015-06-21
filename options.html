@@ -1,105 +1,114 @@
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>Настройка Habr Ajax Paging</title>
-    <script type="text/javascript" src="optionsInline.js"></script>
-    <link href="http://habrahabr.ru/styles/all.css" rel="stylesheet" media="all"/>
-    <link href="http://habrahabr.ru/styles/forms.css" rel="stylesheet" media="all"/>
-    <link href="http://habrahabr.ru/styles/settings/all.css" rel="stylesheet" media="all"/>
-    <style type="text/css">
-        body {
-            text-align: left;
-            padding: 30px;
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>Настройка Habr Ajax Paging</title>
+	<script type="text/javascript" src="optionsInline.js"></script>
+	<link href="http://habrahabr.ru/styles/all.css" rel="stylesheet" media="all"/>
+	<link href="http://habrahabr.ru/styles/forms.css" rel="stylesheet" media="all"/>
+	<link href="http://habrahabr.ru/styles/settings/all.css" rel="stylesheet" media="all"/>
+	<style type="text/css">
+		body {
+			text-align: left;
+			padding: 30px;
 			background: #FFF;
-        }
-        .user_settings {
-            width: 600px;
-        }
-        input.narrow {
-            width: 70px;
-        }
-    </style>
-    <script type="text/javascript" src="jquery.js"></script>
-    <script type="text/javascript" src="settings.js"></script>
+		}
+
+		.user_settings {
+			width: 600px;
+		}
+
+		input.narrow {
+			width: 70px;
+		}
+	</style>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="settings.js"></script>
 </head>
 
 <body>
 
-<div><div class="user_settings">
+<div>
+	<div class="user_settings">
 
-    <form id="habr-more-settings" action=".">
+		<form id="habr-more-settings" action=".">
 
-        <p>
-            Настройки экстеншна
-            <a href="https://chrome.google.com/webstore/detail/glaccbllkhielccdhfbbpilnlbemgaji">Habrahabr More</a>. Про улучшения и ошибки пишите
-            <a href="http://habrahabr.ru/users/denver/" class="user_link">denver</a>
-        </p>
+			<p>
+				Настройки экстеншна
+				<a href="https://chrome.google.com/webstore/detail/glaccbllkhielccdhfbbpilnlbemgaji">Habrahabr More</a>. Про улучшения и ошибки пишите
+				<a href="http://habrahabr.ru/users/denver/" class="user_link">denver</a>
+			</p>
 
-        <br class="clear"/>
+			<br class="clear"/>
 
-        <h2>Подгрузка новых постов</h2>
+			<h2>Подгрузка новых постов</h2>
 
-        <div class="item">
-            <label><input type="checkbox" name="isEnabledTimedChecks" checked="checked">Включить регулярную проверку</label>
-        </div>
+			<div class="item">
+				<label><input type="checkbox" name="isEnabledTimedChecks" checked="checked">Включить регулярную проверку</label>
+			</div>
 
-        <table>
-            <tr>
-                <td>
-                    <div class="item">
-                        <label for="frequencyChecksForNew">Проверять раз в</label>
-                        <input type="number" class="narrow" value="" id="frequencyChecksForNew" name="frequencyChecksForNew" min="5"> секунд
-                    </div>
-                </td>
-                <td width="20"></td>
-                <td>
-                    <div class="item">
-                        <label for="maxChecksForNew">Остановиться после</label>
-                        <input type="number" class="narrow" value="" id="maxChecksForNew" name="maxChecksForNew" min="0"> проверок
-                    </div>
-                </td>
-            </tr>
-        </table>
+			<table>
+				<tr>
+					<td>
+						<div class="item">
+							<label for="frequencyChecksForNew">Проверять раз в</label>
+							<input type="number" class="narrow" value="" id="frequencyChecksForNew" name="frequencyChecksForNew" min="5"> секунд
+						</div>
+					</td>
+					<td width="20"></td>
+					<td>
+						<div class="item">
+							<label for="maxChecksForNew">Остановиться после</label>
+							<input type="number" class="narrow" value="" id="maxChecksForNew" name="maxChecksForNew" min="0"> проверок
+						</div>
+					</td>
+				</tr>
+			</table>
 
-        <br class="clear"/>
+			<br class="clear"/>
 
-        <h2>Подгрузка следующей страницы</h2>
+			<h2>Подгрузка следующей страницы</h2>
 
-        <div class="item">
-            Подождать <input type="number" class="narrow" name="nextPageDelay" id="nextPageDelay" value="" min="0"> секунд
-            <div class="description">Чтобы успеть отменить запрос/вставку нажатием на красную кнопку или &lt;Esc&gt;</div>
-        </div>
+			<div class="item">
+				Подождать
+				<input type="number" class="narrow" name="nextPageDelay" id="nextPageDelay" value="" min="0"> секунд
+				<div class="description">Чтобы успеть отменить запрос/вставку нажатием на красную кнопку или &lt;Esc&gt;</div>
+			</div>
 
-        <br class="clear"/>
+			<br class="clear"/>
 
-        <h2>Другие улучшения</h2>
+			<h2>Другие улучшения</h2>
 
-        <div class="item">
-            <label><input type="checkbox" name="showKarma" checked="checked">Показывать карму и рейтинг на панели</label>
-            <div class="description">Выводит на панель рядом с логином. Не имеет смысла для незарегистрированных.</div>
-        </div>
+			<div class="item">
+				<label><input type="checkbox" name="showKarma" checked="checked">Показывать карму и рейтинг на панели</label>
 
-        <div class="item">
-            <label><input type="checkbox" name="addMoreLinksToPersonalStuff" checked="checked">Показывать ссылки на свои топики, комментарии, ответы</label>
-            <div class="description">Выводит на панель рядом с логином. Не имеет смысла для незарегистрированных.</div>
-        </div>
+				<div class="description">Выводит на панель рядом с логином. Не имеет смысла для незарегистрированных.</div>
+			</div>
 
-        <div class="item">
-            <label><input type="checkbox" name="hideSocialButtons" checked="checked">Скрыть социальные кнопки у постов</label>
-        </div>
+			<div class="item">
+				<label><input type="checkbox" name="addMoreLinksToPersonalStuff" checked="checked">Показывать ссылки на свои топики, комментарии, ответы</label>
 
-        <div class="item">
-            <label><input type="checkbox" name="getScoreForAllPosts" checked="checked">Режим набюлюдателя</label>
-            <div class="description">Открывает оценки новых постов, но не дает голосовать за них.<br>(Для тех кто не болеет синдромом вахтера ;)</div>
-        </div>
+				<div class="description">Выводит на панель рядом с логином. Не имеет смысла для незарегистрированных.</div>
+			</div>
 
-        <div class="buttons">
-            <input class="habr-more-save" type="submit" value="Сохранить">&nbsp;<span class="habr-more-save-ok" style="display: none">Успешно сохранено</span>
-        </div>
+			<div class="item">
+				<label><input type="checkbox" name="hideSocialButtons" checked="checked">Скрыть социальные кнопки у постов</label>
+			</div>
 
-    </form>
+			<div class="item">
+				<label><input type="checkbox" name="getScoreForAllPosts" checked="checked">Режим набюлюдателя</label>
 
-</div></div>
+				<div class="description">Открывает оценки новых постов, но не дает голосовать за них.<br>(Для тех кто не болеет синдромом вахтера ;)
+				</div>
+			</div>
+
+			<div class="buttons">
+				<input class="habr-more-save" type="submit" value="Сохранить">&nbsp;<span class="habr-more-save-ok" style="display: none">Успешно сохранено</span>
+			</div>
+
+		</form>
+
+	</div>
+</div>
 
 </body>
 </html>
