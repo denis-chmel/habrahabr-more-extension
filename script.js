@@ -3,15 +3,6 @@ var stopTrackingScrollEvent = false;
 function onSettingsLoadedCallback() {
 	prepareAdvancedNextPageLink();
 	scheduleCheckingNewPosts(extensionOptions.maxChecksForNew);
-	if (extensionOptions.hideSocialButtons) {
-		hideSocialButtons();
-	}
-	if (extensionOptions.showKarma) {
-		showKarma(getUsername());
-	}
-	if (extensionOptions.addMoreLinksToPersonalStuff) {
-		addMoreLinksToPersonalStuff(getUsername());
-	}
 	if (extensionOptions.getScoreForAllPosts) {
 		getScoreForAllPosts();
 	}
@@ -293,35 +284,6 @@ $(document).keyup(function (e) {
 
 function getUsername() {
 	return $("#header .username").text();
-}
-
-function getQATopicId() {
-	return window.location.href.match(/\/qa\/\d+\//g);
-}
-
-function hideSocialButtons() {
-	$(".infopanel .twitter").hide();
-	$(".infopanel .vkontakte").hide();
-	$(".infopanel .facebook").hide();
-	$(".infopanel .googleplus").hide();
-}
-
-function showKarma(username) {
-	$.get('http://habrahabr.ru/api/profile/' + username + '/', null, function (response) {
-		$("#charge_string").removeAttr("id").prepend(
-			'Карма <span class="karma">' + $(response).find("karma").text() + '</span>' +
-			', рейтинг <span class="rating">' + $(response).find("rating").text() + '</span>. ');
-	});
-}
-
-function addMoreLinksToPersonalStuff() {
-	var username = getUsername();
-	$("#header .bottom").append(
-		'<a href="/users/' + username + '/topics/">посты</a>' +
-		'<a href="/users/' + username + '/qa/questions/">вопросы</a>' +
-		'<a href="/users/' + username + '/qa/answers/">ответы</a>' +
-		'<a href="/users/' + username + '/comments/">комментарии</a>'
-	);
 }
 
 function getScoreForAllPosts() {
