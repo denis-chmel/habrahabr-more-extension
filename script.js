@@ -16,12 +16,13 @@ function onSettingsLoadedCallback() {
         getScoreForAllPosts();
     }
 
-	if ($('.page-nav').length) {
+	var $footerBlocks = $('.rotated_posts:visible, .bottom_promo_blocks:visible, .footer_panel:visible');
+	if ($footerBlocks.length) {
 		var showText = '&darr;&nbsp;Посмотреть&nbsp;футер';
 		var hideText = '&uarr;&nbsp;Спрятать&nbsp;футер';
-		$('<a href="#toggle-footer" class="toggle-footer">' + showText + '</a>').insertBefore(".page-nav");
+		$('<a href="#toggle-footer" class="toggle-footer">' + showText + '</a><div class="clear"></div>').insertBefore($footerBlocks.first());
 		$('<div id="hidden-footer" class="hidden"></div>').insertBefore(".footer_panel");
-		$('.rotated_posts, .bottom_promo_blocks, .footer_panel').appendTo('#hidden-footer');
+		$footerBlocks.appendTo('#hidden-footer');
 
 		$('.toggle-footer').click(function () {
 			stopTrackingScrollEvent = true;
@@ -41,18 +42,20 @@ function onSettingsLoadedCallback() {
     $(document).on("click", "#next_page", function () {
         var nextPrevBlock = $(".next-prev"); // блок с кнопками Сюда/Туда
         nextPrevBlock.addClass("started"); // флаг начала процесса дозагрузки
-		$(".tab_settings .g-icon").addClass('spinning');
+		toggleSpinning(true, true);
         var href = $(this).attr("href"); // ссылка кнопки Туда
         window.morePostsCounter = setTimeout(function () {
             $.ajax({
                 url:href,
+				complete: function() {
+					nextPrevBlock.removeClass("started"); // убираем флаг
+					toggleSpinning(false, true);
+				},
                 success:function (response) {
                     if (!nextPrevBlock.hasClass("started")) {
                         // Пользователь успел отменить до ответа, но после запроса.
                         return;
                     }
-                    nextPrevBlock.removeClass("started"); // убираем флаг
-					$(".tab_settings .g-icon").removeClass('spinning');
 
                     $([
                         ".comments_list", // догружаем комментарии /users/boomburum/comments/
@@ -118,11 +121,11 @@ function checkForNewPosts(afterCheckCallback) {
         // это вообще не страница с постами, уходим
         return;
     }
-	$(".tab_settings .g-icon").addClass('spinning');
+	toggleSpinning(true);
     $.ajax({
         url:window.location.href,
 		complete: function() {
-			$(".tab_settings .g-icon").removeClass('spinning');
+			toggleSpinning(false);
 		},
         success:function (response) {
             $("#posts-check-now").removeAttr("disabled");
@@ -237,9 +240,18 @@ $(document).on("click", ".next-prev .cancel", function () {
 	stopTrackingScrollEvent = false;
     clearTimeout(window.morePostsCounter);
     $(".next-prev").removeClass("started");
-	$(".tab_settings .g-icon").removeClass('spinning');
+	toggleSpinning(false, true);
     return false;
 });
+
+function toggleSpinning(spin, bottom_icon)
+{
+	var $icon = $('#navbar .g-icon-gear');
+	if (!bottom_icon || !$icon.length) {
+		$icon = $("#navbar .g-icon-burger");
+	}
+	$icon.toggleClass('spinning', spin);
+}
 
 function prepareAdvancedNextPageLink() {
     var nextPageLink = $("#next_page").attr("href");
