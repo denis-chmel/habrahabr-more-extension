@@ -10,6 +10,7 @@
         body {
             text-align: left;
             padding: 30px;
+			background: #FFF;
         }
         .user_settings {
             width: 600px;
@@ -74,20 +75,6 @@
         <h2>Другие улучшения</h2>
 
         <div class="item">
-            <label><input type="checkbox" name="highlightUnreadQAAnswers" checked="checked">Подсвечивать новые ответы в QA</label>
-            <div class="description">Счетчики хранит в localStorage, поэтому подсвечивает только в одном браузере.</div>
-        </div>
-
-        <div class="item">
-            <label><input type="checkbox" name="alwaysShowSubscribeCheckbox" checked="checked">Всегда показывать чекбокс для подписки на комментарии</label>
-            <div class="description">Обычно чекбокс появляется только если был хотя бы один ответ. Не имеет смысла для незарегистрированных.</div>
-        </div>
-
-        <div class="item">
-            <label><input type="checkbox" name="highlightTopicStarterComments" checked="checked">Выделять красненьким комментарии автора топика</label>
-        </div>
-
-        <div class="item">
             <label><input type="checkbox" name="showKarma" checked="checked">Показывать карму и рейтинг на панели</label>
             <div class="description">Выводит на панель рядом с логином. Не имеет смысла для незарегистрированных.</div>
         </div>
@@ -103,7 +90,7 @@
 
         <div class="item">
             <label><input type="checkbox" name="getScoreForAllPosts" checked="checked">Режим набюлюдателя</label>
-            <div class="description">Открывает оценки новых постов (не дает голосовать за них)</div>
+            <div class="description">Открывает оценки новых постов, но не дает голосовать за них.<br>(Для тех кто не болеет синдромом вахтера ;)</div>
         </div>
 
         <div class="buttons">
