@@ -113,10 +113,12 @@ function checkForNewPosts(afterCheckCallback) {
 		return;
 	}
 	toggleSpinning(true);
+	stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
 	$.ajax({
 		url: window.location.href,
 		complete: function () {
 			toggleSpinning(false);
+			stopTrackingScrollEvent = false;
 		},
 		success: function (response) {
 			$("#posts-check-now").removeAttr("disabled");
@@ -125,7 +127,6 @@ function checkForNewPosts(afterCheckCallback) {
 			var newPostIds = getPostIds(response).diff(oldPostIds);
 			updateOldPosts(oldPostIds, response); // раз уж загрузили свежие версии старых постов обновим их на текущей странице
 			addNewPostsAsHidden(newPostIds, response);
-			stopTrackingScrollEvent = false;
 			if (afterCheckCallback) afterCheckCallback();
 		}
 	});
@@ -267,7 +268,6 @@ $(window).scroll(function () {
 		$("#next_page").click(); // кликаем ссылку "Туда"
 	}
 	if ($(window).scrollTop() == 0) { // юзер доскроллил до начала странцы
-		stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
 		if (extensionOptions) {
 			scheduleCheckingNewPosts(extensionOptions.maxChecksForNew); // пролонгируем лимит проверки, поскольку юзер жив
 		}
