@@ -2,6 +2,9 @@ var stopTrackingScrollEvent = false;
 
 function onSettingsLoadedCallback() {
 	prepareAdvancedNextPageLink();
+	if (extensionOptions.appendSideSearch) {
+		appendSideSearch();
+	}
 	scheduleCheckingNewPosts(extensionOptions.maxChecksForNew);
 	if (extensionOptions.getScoreForAllPosts) {
 		getScoreForAllPosts();
@@ -31,6 +34,10 @@ function onSettingsLoadedCallback() {
 	}
 
 	$(document).on("click", "#next_page", function () {
+		if (stopTrackingScrollEvent) {
+			return;
+		}
+		stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
 		var nextPrevBlock = $(".next-prev"); // блок с кнопками Сюда/Туда
 		nextPrevBlock.addClass("started"); // флаг начала процесса дозагрузки
 		toggleSpinning(true, true);
@@ -113,12 +120,10 @@ function checkForNewPosts(afterCheckCallback) {
 		return;
 	}
 	toggleSpinning(true);
-	stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
 	$.ajax({
 		url: window.location.href,
 		complete: function () {
 			toggleSpinning(false);
-			stopTrackingScrollEvent = false;
 		},
 		success: function (response) {
 			$("#posts-check-now").removeAttr("disabled");
@@ -259,12 +264,26 @@ function prepareAdvancedNextPageLink() {
 	);
 }
 
-$(window).scroll(function () {
-	if (stopTrackingScrollEvent) {
+function appendSideSearch() {
+	var $sidebar = $('.sidebar_right:visible');
+	if (!$sidebar.length) {
 		return;
 	}
+	var width = $sidebar.width() - 15;
+	if (width <= 0) {
+		return;
+	}
+	console.log(width);
+	$(".page_head").prepend(
+		'<form action="/search/" method="get" class="side_search_form inner_search_form">'+
+		'<input type="text" name="q" placeholder="Поиск">' +
+		'</form>'
+	);
+	$('.side_search_form input').width(width);
+}
+
+$(window).scroll(function () {
 	if ($(window).scrollTop() + 10 >= ($(document).height() - ($(window).height()))) { // за 10 пикселов до конца страницы
-		stopTrackingScrollEvent = true; // отключаем этот уловитель скролла на время дозагрузки
 		$("#next_page").click(); // кликаем ссылку "Туда"
 	}
 	if ($(window).scrollTop() == 0) { // юзер доскроллил до начала странцы

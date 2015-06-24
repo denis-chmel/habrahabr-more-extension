@@ -6,7 +6,6 @@
 	position: absolute;
 	margin-left: -30px;
 	padding-left: 30px;
-	background: url("images/ajax.gif") left center no-repeat;
 }
 
 .next-prev .more-posts {
@@ -38,12 +37,9 @@
 }
 
 #new-posts > div {
-	background: #E8E8FF;
 	padding: 15px;
 	margin: 20px auto;
 	font-size: 14px;
-	background: rgb(241, 233, 216);
-	background: rgb(240, 236, 211);
 	background: rgb(237, 236, 215);
 	border-radius: 2px;
 	color: #8c896b;
@@ -134,4 +130,18 @@ div.comment_item.is_new {
 
 #layout .inner {
 	padding-bottom: 20px;
+}
+
+.side_search_form {
+	float: right;
+	margin-top: 5px;
+}
+
+.side_search_form input {
+	font-size: 15px;
+	padding: 6px;
+	border-radius: 4px;
+	width: 285px;
+	border: 1px solid;
+	border-color: #CCC #EEE #EEE #CCC;
 }
