@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Habrahabr More",
-  "version": "2.0.4",
+  "version": "2.1",
   "description": "Добавляет к Хабру AJAX paging и другие улучшения",
   "icons": {
     "48": "images/icon48.png"
@@ -12,7 +12,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://habrahabr.ru/*"],
+      "matches": ["http://habrahabr.ru/*", "http://geektimes.ru/*", "http://megamozg.ru/*"],
       "css": ["style.css"],
       "js": [
         "jquery.js",
