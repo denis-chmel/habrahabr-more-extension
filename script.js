@@ -14,8 +14,7 @@ function onSettingsLoadedCallback() {
 	if ($footerBlocks.length) {
 		var showText = '&darr;&nbsp;Посмотреть&nbsp;футер';
 		var hideText = '&uarr;&nbsp;Спрятать&nbsp;футер';
-		$('<a href="#toggle-footer" class="toggle-footer">' + showText + '</a><div class="clear"></div>').insertBefore($footerBlocks.first());
-		$('<div id="hidden-footer" class="hidden"></div>').insertBefore(".footer_panel");
+		$('<a href="#toggle-footer" class="toggle-footer">' + showText + '</a><div class="clear"></div><div id="hidden-footer" class="hidden"></div>').insertBefore($footerBlocks.first());
 		$footerBlocks.appendTo('#hidden-footer');
 
 		$('.toggle-footer').click(function () {
@@ -273,7 +272,6 @@ function appendSideSearch() {
 	if (width <= 0) {
 		return;
 	}
-	console.log(width);
 	$(".page_head").prepend(
 		'<form action="/search/" method="get" class="side_search_form inner_search_form">'+
 		'<input type="text" name="q" placeholder="Поиск">' +
